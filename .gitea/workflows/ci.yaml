@@ -5,9 +5,5 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     steps:
       - run: echo "Hello from Gitea Actions!"
-      - uses: actions/checkout@v3
-      - name: Say Hello
-        run: echo "Hello from Gitea Actions!"
