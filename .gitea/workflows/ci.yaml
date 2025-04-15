@@ -4,6 +4,12 @@ on:
     branches: [ main, dev ]
 
 jobs:
-  build:
+  test-on-ubuntu:
+    runs-on: ubuntu-latest
     steps:
       - run: echo "Hello from Gitea Actions!"
+
+  test-on-self-hosted:
+    runs-on: self-hosted
+    steps:
+      - run: echo "on tiger hosted"
