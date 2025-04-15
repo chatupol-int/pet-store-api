@@ -14,6 +14,7 @@ type Message struct {
 var messages = []Message{
 	{ID: 1, Content: "Hello, World!"},
 	{ID: 2, Content: "Golang is awesome!"},
+	{ID: 3, Content: "3"},
 }
 
 func main() {
