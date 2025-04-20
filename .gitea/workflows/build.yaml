@@ -11,12 +11,14 @@ jobs:
 
   test-on-self-hosted:
     runs-on: self-hosted
+    container:
+      image: node:20
     steps:
       - run: echo "on tiger hosted"
 
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - run: pwd
       - run: ls -la
       - run: docker version
