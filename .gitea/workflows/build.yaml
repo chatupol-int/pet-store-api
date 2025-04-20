@@ -9,14 +9,16 @@ jobs:
     steps:
       - run: echo "Hello from Gitea Actions!"
 
-  checkout:
+  build-and-push-image:
     runs-on: self-hosted
     steps:
       - run: echo "on tiger hosted"
 
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - run: pwd
       - run: ls -la
-      - run: docker version
+      - run: echo "${{ secrets.DOCKER_PASSWORD }}"  | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+      - run: docker build -t 192.168.49.2:31269/pet-store .
+      - run: docker push 192.168.49.2:31269/pet-store
