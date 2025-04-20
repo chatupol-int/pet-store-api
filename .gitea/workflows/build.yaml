@@ -21,6 +21,7 @@ jobs:
 
   build-image:
     runs-on: self-hosted
+    steps:
       - run: pwd
       - run: ls -la
       - run: docker version
