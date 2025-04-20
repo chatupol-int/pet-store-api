@@ -19,6 +19,6 @@ jobs:
 
       - run: pwd
       - run: ls -la
-      - run: echo "${{ secrets.DOCKER_PASSWORD }}"  | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+      - run: echo "${{ secrets.DOCKER_PASSWORD }}"  | docker login 192.168.49.2:31269 -u "${{ secrets.DOCKER_USER }}" --password-stdin
       - run: docker build -t 192.168.49.2:31269/pet-store .
       - run: docker push 192.168.49.2:31269/pet-store
