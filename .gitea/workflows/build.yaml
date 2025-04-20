@@ -14,4 +14,4 @@ jobs:
     steps:
       - run: echo "on tiger hosted"
       - run: pwd
-      - run: whereis code
+      - run: ls -la
