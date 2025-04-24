@@ -9,6 +9,19 @@ jobs:
     steps:
       - run: echo "Hello from Gitea Actions!"
 
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@master
+        with:
+          args: >
+            -Dsonar.projectKey=pet-store
+            -Dsonar.host.url=http://localhost:9099
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   build-and-push-image:
     runs-on: self-hosted
     steps:
