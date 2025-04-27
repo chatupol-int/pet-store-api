@@ -11,16 +11,26 @@ jobs:
 
   scan:
     runs-on: ubuntu-latest
+    services:
+      sonarqube:
+        image: sonarqube:latest  # Run SonarQube in a Docker container
+        ports:
+          - 9000:9000  # Expose port 9000 for SonarQube
+        options: >-
+          --health-cmd="curl -f http://localhost:9000/health"
+          --health-timeout=30s
+          --health-retries=3
     steps:
-      - uses: actions/checkout@v2
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@master
-        with:
-          args: >
-            -Dsonar.projectKey=pet-store
-            -Dsonar.host.url=http://localhost:9099
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Run SonarScanner (Docker)
+        run: |
+          docker run --rm -v $(pwd):/usr/src --network=host sonarsource/sonar-scanner-cli \
+            -Dsonar.projectKey=my_project_key \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}    
 
   build-and-push-image:
     runs-on: self-hosted
