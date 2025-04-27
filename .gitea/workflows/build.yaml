@@ -17,7 +17,6 @@ jobs:
 
       - name: Sonar version
         run: sonar-scanner --version
-            - name: Run SonarQube Scanner
 
       - name: Run SonarQube Scanner 
         run: |
