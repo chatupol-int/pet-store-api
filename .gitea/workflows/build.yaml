@@ -12,11 +12,21 @@ jobs:
   scan:
     runs-on: self-hosted
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Sonar version
         run: sonar-scanner --version
+            - name: Run SonarQube Scanner
+
+      - name: Run SonarQube Scanner 
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=pet-store \
+            -Dsonar.projectName="pet-store" \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=http://localhost:9099 \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
   build-and-push-image:
     runs-on: self-hosted
