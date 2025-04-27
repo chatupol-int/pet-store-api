@@ -10,7 +10,7 @@ jobs:
       - run: echo "Hello from Gitea Actions!"
 
   scan:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     services:
       sonarqube:
         image: sonarqube:latest  # Run SonarQube in a Docker container
