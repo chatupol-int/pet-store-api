@@ -4,12 +4,7 @@ on:
     branches: [ main, dev ]
 
 jobs:
-  test-on-ubuntu:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Hello from Gitea Actions!"
-
-  scan:
+  code-scan:
     runs-on: self-hosted
     steps:
       - name: Checkout code
@@ -26,22 +21,33 @@ jobs:
             -Dsonar.sources=. \
             -Dsonar.host.url=http://localhost:9099 \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      
+      - name: select osv-scanner version
+        run: OSV_VERSION="latest"
+
+      - name: scan app dependency # required the golang installation on the act_runner to generate the go.sum file
+        run: osv-scanner --lockfile=go.sum
 
   build-and-push-image:
     runs-on: self-hosted
     steps:
-      - run: echo "on tiger hosted"
-
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - run: pwd
-      - run: ls -la
-      - run: echo "${{ secrets.DOCKER_PASSWORD }}"  | docker login 192.168.49.2:31269 -u "${{ secrets.DOCKER_USER }}" --password-stdin
+      - name: login docker
+        run: echo "${{ secrets.DOCKER_PASSWORD }}"  | docker login 192.168.49.2:31269 -u "${{ secrets.DOCKER_USER }}" --password-stdin
+
       - name: Generate version tag
         run: echo "VERSION=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
 
-      - run: docker build -t 192.168.49.2:31269/pet-store:${{ env.VERSION }} .
-      - run: docker push 192.168.49.2:31269/pet-store:${{ env.VERSION }}
+      - name: build image
+        run: docker build -t 192.168.49.2:31269/pet-store:${{ env.VERSION }} .
+
+      - name: scan image
+        run: trivy image 192.168.49.2:31269/pet-store:${{ env.VERSION }}
+
+      - name: push image
+        run: docker push 192.168.49.2:31269/pet-store:${{ env.VERSION }}
+
     env:
       VERSION: ${{ env.VERSION }}
